@@ -6,16 +6,17 @@ const gen = (function*() {
 })();
 
 const asyncConsumeIterator = (iter, progressFn, doneFn = _ => _) => {
-  while (1) {
+  const loop = () => {
     const {value, done} = iter.next();
     if (done) {
-      return doneFn();
+      doneFn();
+    } else {
+      progressFn(value);
+      setTimeout(loop, 0);
     }
-    progressFn(value);
-  }
-  doneFn();
+  };
+  loop();
 };
-
 
 asyncConsumeIterator(gen, data => {
   console.log(data);
