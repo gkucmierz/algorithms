@@ -1,9 +1,12 @@
 
 // generate map with unique elements, and occurring frequencies
+// arr: string
+// pick: function
 
-const arrayHistogram = arr => {
+const arrayHistogram = (arr, pick = el => el) => {
   const quant = new Map();
-  arr.map(el => {
+  arr.map(obj => {
+    const el = pick(obj);
     const cnt = quant.get(el) || 0;
     quant.set(el, cnt + 1);
   });
@@ -12,9 +15,10 @@ const arrayHistogram = arr => {
 
 // with: Nullish coalescing operator
 
-const arrayHistogram2 = arr => {
+const arrayHistogram = (arr, pick = el => el) => {
   const quant = new Map();
-  arr.map(el => {
+  arr.map(obj => {
+    const el = pick(obj);
     const cnt = quant.get(el) ?? 0;
     quant.set(el, cnt + 1);
   });
