@@ -1,9 +1,4 @@
 
-// board matrix 2d
-// Simple class that helps map, clone or iterate over 2d boards
-// Also it allows to find closest neighbours to every cell
-// including cell itself
-
 class Board {
   static SELF = 1;
   static EDGE = 2;
@@ -26,54 +21,40 @@ class Board {
   get flat() {
     return this.data.reduce((res, row) => (res.push(...row), res), []);
   }
-  _calcIdx(rowIdx, cellIdx) {
-    return rowIdx * this.cols + cellIdx;
+  calcIdx(rowIdx, colIdx) {
+    return rowIdx * this.cols + colIdx;
   }
   map(callback) {
-    return new Board(this.data.map((row, rowIdx) => row.map((cell, cellIdx) => {
-      const idx = this._calcIdx(rowIdx, cellIdx);
-      return callback(cell, {rowIdx, cellIdx, idx});
+    return new Board(this.data.map((row, rowIdx) => row.map((cell, colIdx) => {
+      const idx = this.calcIdx(rowIdx, colIdx);
+      return callback(cell, {rowIdx, colIdx, idx});
     })));
   }
-  neighbours(callback, types = Board.SELF | Board.EDGE | Board.COLS, overBound = false) {
-    const boundaryFilter = overBound ? () => true : ([rowIdx, cellIdx]) => {
+  neighbours(rowIdx, colIdx, types = Board.SELF | Board.EDGE | Board.CORNER, overBound = false) {
+    const boundaryFilter = overBound ? () => true : ([rowIdx, colIdx]) => {
       if (rowIdx < 0 || rowIdx >= this.rows) return false;
-      if (cellIdx < 0 || cellIdx >= this.cols) return false;
+      if (colIdx < 0 || colIdx >= this.cols) return false;
       return true;
     };
-    return this.map((value, {rowIdx, cellIdx, idx}) => {
-      const edgeNeighbours = [
-        [rowIdx-1, cellIdx], [rowIdx+1, cellIdx],
-        [rowIdx, cellIdx-1], [rowIdx, cellIdx+1]
-      ].filter(boundaryFilter);
-      const cornerNeighbours = [
-        [rowIdx-1, cellIdx-1], [rowIdx-1, cellIdx+1],
-        [rowIdx+1, cellIdx-1], [rowIdx+1, cellIdx+1]
-      ].filter(boundaryFilter);
-      const neighbours = [
-        ...(types && Board.SELF ? [[rowIdx, cellIdx]] : []),
-        ...(types && Board.EDGE ? edgeNeighbours : []),
-        ...(types && Board.CORNER ? cornerNeighbours : []),
-      ].map(([rowIdx, cellIdx]) => {
-        const value = this.data[rowIdx][cellIdx];
-        const idx = this._calcIdx(rowIdx, cellIdx);
-        return {value, rowIdx, cellIdx, idx};
-      });
-      return callback(neighbours, {value, rowIdx, cellIdx, idx});
+    const edgeNeighbours = [
+      [rowIdx-1, colIdx], [rowIdx+1, colIdx],
+      [rowIdx, colIdx-1], [rowIdx, colIdx+1]
+    ];
+    const cornerNeighbours = [
+      [rowIdx-1, colIdx-1], [rowIdx-1, colIdx+1],
+      [rowIdx+1, colIdx-1], [rowIdx+1, colIdx+1]
+    ];
+    return [
+      ...(types & Board.SELF ? [[rowIdx, colIdx]] : []),
+      ...(types & Board.EDGE ? edgeNeighbours : []),
+      ...(types & Board.CORNER ? cornerNeighbours : []),
+    ].filter(boundaryFilter).map(([rowIdx, colIdx]) => {
+      const value = this.data[rowIdx][colIdx];
+      const idx = this._calcIdx(rowIdx, colIdx);
+      return {value, rowIdx, colIdx, idx};
     });
   }
   print(rowsJoin = '\n', colsJoin = ' ') {
     return this.data.map(row => row.join(rowsJoin)).join(colsJoin);
   };
 }
-
-const board = new Board([[1,2],[3,4]]);
-
-console.log(board.data); // board data
-console.log(board.flat); // flatten data
-const sameBoard = new Board(board.flat, 2);
-console.log(sameBoard.map(cell => cell * 2)); // map over cells
-console.log(sameBoard.map((_, {rowIdx, cellIdx, idx}) => [rowIdx, cellIdx, idx])); // get indexes
-console.log(board.print()); // return in printable format
-// iterate over closest neighbours:
-console.log(board.neighbours(n => n.reduce((sum, cell) => sum + cell.value, 0)).data);
