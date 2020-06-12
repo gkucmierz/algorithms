@@ -24,6 +24,12 @@ class Board {
   calcIdx(rowIdx, colIdx) {
     return rowIdx * this.cols + colIdx;
   }
+  getCell(idx) {
+    const rowIdx = Math.floor(idx / this.cols);
+    const colIdx = idx % this.cols;
+    const value = this.data[rowIdx][colIdx];
+    return {value, rowIdx, colIdx, idx};
+  }
   map(callback) {
     return new Board(this.data.map((row, rowIdx) => row.map((cell, colIdx) => {
       const idx = this.calcIdx(rowIdx, colIdx);
@@ -50,7 +56,7 @@ class Board {
       ...(types & Board.CORNER ? cornerNeighbours : []),
     ].filter(boundaryFilter).map(([rowIdx, colIdx]) => {
       const value = this.data[rowIdx][colIdx];
-      const idx = this._calcIdx(rowIdx, colIdx);
+      const idx = this.calcIdx(rowIdx, colIdx);
       return {value, rowIdx, colIdx, idx};
     });
   }
