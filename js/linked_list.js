@@ -41,34 +41,34 @@ const LinkedList = (() => {
 
     const removeItems = (head, cond) => {
       const parents = new WeakMap();
-      const remove = (head, cond) => {
+      const remove = head => {
         if (head === null) return null;
         if (getNext(head)) parents.set(getNext(head), head);
-        if (cond(getValue(head))) {
-          const next = remove(getNext(head), cond);
+        if (cond(getValue(head), head)) {
+          const next = remove(getNext(head));
           if (parents.has(head)) setNext(parents.get(head), next);
           return next;
         }
-        const next = remove(getNext(head), cond);
+        const next = remove(getNext(head));
         return head;
       };
-      return remove(head, cond);
+      return remove(head);
     };
 
     const removeItem = (head, cond) => {
       const parents = new WeakMap();
-      const remove = (head, cond) => {
+      const remove = head => {
         if (head === null) return null;
         if (getNext(head)) parents.set(getNext(head), head);
-        if (cond(getValue(head))) {
+        if (cond(getValue(head), head)) {
           const next = getNext(head);
           if (parents.has(head)) setNext(parents.get(head), next);
           return next;
         }
-        const next = remove(getNext(head), cond);
+        const next = remove(getNext(head));
         return head;
       };
-      return remove(head, cond);
+      return remove(head);
     };
 
     return {
