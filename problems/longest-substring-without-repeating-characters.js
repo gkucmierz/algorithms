@@ -12,18 +12,19 @@ const lengthOfLongestSubstring = (s, result = _ => _) => {
     if (set.has(c)) {
       for (lastIdx; lastIdx < i; ++lastIdx) {
         const rc = s[lastIdx];
-        set.delete(rc);
         if (rc === c) {
           lastIdx++;
           break;
         }
+        set.delete(rc);
       }
-    }
-    set.add(c);
-    const dist = i - lastIdx;
-    if (dist > max) {
-      max = dist;
-      [maxs, maxe] = [lastIdx, i];
+    } else {
+      set.add(c);
+      const dist = i - lastIdx;
+      if (dist > max) {
+        max = dist;
+        [maxs, maxe] = [lastIdx, i];
+      }
     }
   }
   result(s.slice(maxs, maxe + 1));
