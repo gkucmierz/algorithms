@@ -2,7 +2,7 @@
 // create permutations iterator using provided size or specified array of elements
 
 const permutationsGenerator = function*(sizeOrArr) {
-  const arr = sizeOrArr.map ? sizeOrArr : new Array(sizeOrArr).fill(0).map((_, i) => i);
+  const arr = sizeOrArr.map ? sizeOrArr.slice() : new Array(sizeOrArr).fill(0).map((_, i) => i);
   const size = arr.length;
 
   const gen = function*(res, used, shift) {
