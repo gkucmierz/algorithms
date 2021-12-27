@@ -2,12 +2,12 @@
 // maximum sub array sum, kadanes algorithm
 
 const maxSubArray = (arr, full = false) => {
-  let sum = arr[0];
+  let sum = 0;
   let max = -Infinity;
   let idx = 0;
   let fi = -1;
   let li = -1;
-  for (let i = 1; i < arr.length; ++i) {
+  for (let i = 0; i < arr.length; ++i) {
     sum += arr[i];
     if (arr[i] > sum) {
       sum = arr[i];
