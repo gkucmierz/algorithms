@@ -24,14 +24,13 @@ const Sorted = function(take = n => n, cmp = (a, b) => a-b) {
       if (m === last) break;
       last = m;
     }
-    if (m === arr.length - 1) {
-      if (cmp(take(obj), take(arr[m])) > 0) ++m;
-    }
+    if (cmp(take(obj), take(arr[m])) > 0) ++m;
     arr.splice(m, 0, obj);
     return m;
   };
   
   return {
+    remove: idx => arr.splice(idx, 1),
     clean: () => arr.length = 0,
     get: () => arr,
     add
