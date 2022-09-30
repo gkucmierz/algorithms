@@ -29,5 +29,13 @@ const QuickSum = arr => {
     return upTo(m) - upTo(n) + arr[n];
   };
 
-  return { upTo, fromTo };
+  const update = (n, val) => {
+    const diff = val - arr[n];
+    subSums.map(sums => {
+      sums[n] += diff;
+      n = n / 2 | 0;
+    });
+  };
+
+  return { upTo, fromTo, update };
 };
