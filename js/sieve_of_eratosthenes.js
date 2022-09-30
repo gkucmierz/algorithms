@@ -17,7 +17,8 @@ const Sieve = (max = 1e5) => {
     getPrimes: n => {
       const res = [];
       let cnt = 0;
-      for (let i = 0; i <= n; ++i) {
+      const limit = Math.min(max, n);
+      for (let i = 0; i < limit; ++i) {
         if (!notPrime[i]) {
           res[cnt++] = i;
         }
