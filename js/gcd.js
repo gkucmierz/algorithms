@@ -2,7 +2,7 @@
 // greatest common divisor
 
 // iterative solution:
-function gcd(a, b) {
+const gcd = (a, b) => {
   if (a < 0) a = -a;
   if (b < 0) b = -b;
   if (b > a) {
@@ -14,7 +14,7 @@ function gcd(a, b) {
     if (a == 0) return b;
     b %= a;
   }
-}
+};
 
 // recursive solution:
 const gcd2 = (a, b) => b ? gcd2(b, a % b) : a;
